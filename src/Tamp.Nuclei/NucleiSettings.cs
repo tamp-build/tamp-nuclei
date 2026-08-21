@@ -304,8 +304,26 @@ public sealed class NucleiScanSettings : NucleiSettingsBase
         if (NoColor) yield return "-nc";
     }
 
-    /// <summary>Register a secret for runner-side log redaction.</summary>
-    internal void RegisterSecret(Secret secret) => PlanSecrets.Add(secret);
+    /// <summary>
+    /// Add a credential-bearing header. The value still reaches the command line
+    /// — Nuclei has no stdin path for headers — but it is registered on the plan
+    /// so the runner redacts it from logs, traces, and dry-run output. For a
+    /// stronger guarantee use <see cref="NucleiScanSettingsExtensions.AddSecretFile"/>,
+    /// which keeps the credential off the command line entirely.
+    /// </summary>
+    /// <remarks>
+    /// An instance method rather than a fluent extension because TAMP004 only
+    /// permits <c>Secret.Reveal()</c> inside wrapper settings classes. Building
+    /// the argument is exactly the sanctioned use, so it belongs here.
+    /// </remarks>
+    public NucleiScanSettings AddSecretHeader(string name, Secret value)
+    {
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(value);
+        Headers.Add($"{name}: {value.Reveal()}");
+        PlanSecrets.Add(value);
+        return this;
+    }
 }
 
 /// <summary>Fluent setters for <see cref="NucleiScanSettings"/>.</summary>
@@ -348,22 +366,8 @@ public static class NucleiScanSettingsExtensions
     /// <summary>Add a header verbatim. The value is visible in the OS process table — prefer <see cref="AddSecretFile"/> for credentials.</summary>
     public static NucleiScanSettings AddHeader(this NucleiScanSettings s, string header) { s.Headers.Add(header); return s; }
 
-    /// <summary>
-    /// Add a credential-bearing header. The value still reaches the command line
-    /// (Nuclei has no stdin path for headers) but is registered on the plan so the
-    /// runner redacts it from logs, traces, and dry-run output. For a stronger
-    /// guarantee use <see cref="AddSecretFile"/>, which keeps it off the command
-    /// line entirely.
-    /// </summary>
-    public static NucleiScanSettings AddSecretHeader(this NucleiScanSettings s, string name, Secret value)
-    {
-        ArgumentNullException.ThrowIfNull(s);
-        ArgumentNullException.ThrowIfNull(name);
-        ArgumentNullException.ThrowIfNull(value);
-        s.Headers.Add($"{name}: {value.Reveal()}");
-        s.RegisterSecret(value);
-        return s;
-    }
+    // AddSecretHeader lives on NucleiScanSettings itself, not here — TAMP004
+    // only permits Secret.Reveal() inside wrapper settings classes.
 
     /// <summary>Add a Nuclei secret file (<c>-sf</c>) — the preferred way to pass credentials.</summary>
     public static NucleiScanSettings AddSecretFile(this NucleiScanSettings s, string path) { s.SecretFiles.Add(path); return s; }
