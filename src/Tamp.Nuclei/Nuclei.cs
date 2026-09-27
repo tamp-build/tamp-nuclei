@@ -1,8 +1,8 @@
 namespace Tamp.Nuclei;
 
 /// <summary>
-/// Tamp wrappers for the Nuclei vulnerability scanner. <see cref="Scan"/> runs a
-/// scan; <see cref="UpdateTemplates"/> refreshes the template store.
+/// Tamp wrappers for the Nuclei vulnerability scanner. <c>Scan</c> runs a
+/// scan; <c>UpdateTemplates</c> refreshes the template store.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -44,7 +44,7 @@ namespace Tamp.Nuclei;
 /// <para>
 /// <strong>Template freshness is the value proposition, and a reproducibility
 /// hazard.</strong> The community corpus moves daily. Run
-/// <see cref="UpdateTemplates"/> as its own build step and set
+/// <c>UpdateTemplates</c> as its own build step and set
 /// <see cref="NucleiScanSettings.DisableUpdateCheck"/> on the scan, so template
 /// refresh is a visible, attributable event rather than something the scan does to
 /// itself mid-run — otherwise a finding can appear or vanish between builds with
