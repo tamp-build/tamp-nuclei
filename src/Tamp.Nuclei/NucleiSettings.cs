@@ -200,7 +200,7 @@ public sealed class NucleiScanSettings : NucleiSettingsBase
     /// <remarks>
     /// Values land in the OS process table for the lifetime of the scan. For
     /// credentials prefer <see cref="SecretFiles"/>, or
-    /// <see cref="NucleiScanSettingsExtensions.AddSecretHeader"/> which at least
+    /// <c>NucleiScanSettingsExtensions.AddSecretHeader</c> which at least
     /// registers the value for log redaction.
     /// </remarks>
     public List<string> Headers { get; } = new();
