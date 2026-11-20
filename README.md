@@ -8,7 +8,7 @@ Tamp wrappers for **Nuclei** — template-driven vulnerability scanning and DAST
 | **Tool license** | **MIT** — engine *and* the `nuclei-templates` corpus |
 | **This package** | MIT |
 | **Platform** | Single static Go binary — Windows · Linux · macOS · ARM. No runtime dependencies, no JRE, no Docker required |
-| **Target frameworks** | net8.0 · net9.0 · net10.0 |
+| **Target frameworks** | net10.0 · net11.0 |
 | **SARIF** | Native (`-sarif-export`) — no converter step |
 
 ## Nuclei is two tools depending on how you invoke it
